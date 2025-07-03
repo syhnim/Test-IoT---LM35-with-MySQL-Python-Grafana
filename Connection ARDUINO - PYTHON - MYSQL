@@ -1,0 +1,32 @@
+import serial
+import mysql.connector
+import time
+
+# Setup serial connection (check COM port in Device Manager)
+ser = serial.Serial('COM4', 9600, timeout=1)
+time.sleep(2)  # Allow Arduino time to reboot
+
+# MySQL connection
+conn = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='',
+    database='iot_recordtemp'
+)
+cursor = conn.cursor()
+
+while True:
+    try:
+        line = ser.readline().decode('utf-8').strip()
+        if line:
+            temperature = float(line)
+            print(f"Read Temp: {temperature}°C")
+
+            sql = "INSERT INTO temperature_log (temperature) VALUES (%s)"
+            cursor.execute(sql, (temperature,))
+            conn.commit()
+    except Exception as e:
+        print("Error:", e)
+
+ser.close()
+conn.close()
