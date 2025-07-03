@@ -1,0 +1,17 @@
+int _ABVAR_1_celcius = 0 ;
+
+void setup()
+{
+  Serial.begin(9600);
+  _ABVAR_1_celcius = 0 ;
+
+}
+
+void loop()
+{
+  _ABVAR_1_celcius = ( ( analogRead(0) * 0.488 ) + 0.5 ) ;
+  Serial.print(_ABVAR_1_celcius);
+  Serial.print(" ");
+  Serial.println();
+  delay( 1000 );
+}
